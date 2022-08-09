@@ -30,6 +30,9 @@ confluent kafka cluster describe
 mkdir my_project && cd my_project
 virtualenv env
 source env/bin/activate
+
+deactivate to quit virtualenv
+
 ## run script
 chmod u+x consumer.py \
 ./consumer.py config.ini
