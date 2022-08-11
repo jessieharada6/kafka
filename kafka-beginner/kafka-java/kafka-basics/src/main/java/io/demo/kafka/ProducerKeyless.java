@@ -14,10 +14,13 @@ public class ProducerKeyless {
     public static void main(String[] args) {
         log.info("Hey Kafka Producer");
 
+        String bootstrapServer = "127.0.0.1:9092";
+        String topic = "demo_java";
+
         // create Producer properties
         Properties properties = new Properties();
         // "bootstrap.servers"
-        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
+        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         // "key.serializer" serialise the object to kafka
         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         // "value.serializer" serialise the object to kafka
@@ -28,7 +31,7 @@ public class ProducerKeyless {
 
         // create a producer message/record
         // KEYLESS
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("demo_java", "hello world");
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, "hello world");
 
         // send data - asynchronous operation
         // if we just tell the producer to send, it will not wait for it to finish
