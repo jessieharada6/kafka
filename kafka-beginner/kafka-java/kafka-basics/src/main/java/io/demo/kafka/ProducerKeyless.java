@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
-public class Producer {
-    private static final Logger log = LoggerFactory.getLogger(Producer.class.getSimpleName());
+public class ProducerKeyless {
+    private static final Logger log = LoggerFactory.getLogger(ProducerKeyless.class.getSimpleName());
     public static void main(String[] args) {
-        log.info("Hey Producer");
+        log.info("Hey Kafka Producer");
 
         // create Producer properties
         Properties properties = new Properties();
