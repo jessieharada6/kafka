@@ -53,7 +53,7 @@ public class ConsumerWithShutDown {
                     // wait for the code in the main thread to finish by joining
                     // until main thread dies
                     mainThread.join();
-                    // interrupted
+                    // interrupted - last execution into the catch on interruption
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

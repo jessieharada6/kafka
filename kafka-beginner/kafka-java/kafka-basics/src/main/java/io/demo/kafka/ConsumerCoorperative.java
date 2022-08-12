@@ -26,13 +26,15 @@ public class ConsumerCoorperative {
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        // none: if no offsets found, dont start
+        // auto.offset.reset
+        // none: if no offsets found, don't start
         // earliest: read from earliest, --from-beginning
         // latest: read the latest
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         properties.setProperty(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, CooperativeStickyAssignor.class.getName());
 //        // assign a group id to the consumer group
-//        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "");
+        // if you set group.id properly, when consumer is restarted it will belong to same group, and will start reading data from where it last stopped.
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "");
 //        // assign id to a consumer, can put in a method or put in the constructor
 //        properties.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "");
 
@@ -77,6 +79,7 @@ public class ConsumerCoorperative {
                 ConsumerRecords<String, String> records
                         = consumer.poll(Duration.ofMillis(100));
 
+                // process message before calling consumer.poll() again
                 for(ConsumerRecord<String, String> record : records) {
                     log.info("Key: " + record.key() + " , Value: " + record.value());
                     log.info("Partition: " + record.partition() + " , Offset: " + record.offset());
