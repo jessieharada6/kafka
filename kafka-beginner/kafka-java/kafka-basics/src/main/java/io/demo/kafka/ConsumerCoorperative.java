@@ -1,9 +1,6 @@
 package io.demo.kafka;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
@@ -13,7 +10,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 
-public class ConsumerWithShutDown {
+public class ConsumerCoorperative {
     private static final Logger log = LoggerFactory.getLogger(ProducerKeyless.class.getSimpleName());
     public static void main(String[] args) {
         log.info("Hey Kafka Consumer with Shutdown");
@@ -33,6 +30,11 @@ public class ConsumerWithShutDown {
         // earliest: read from earliest, --from-beginning
         // latest: read the latest
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        properties.setProperty(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, CooperativeStickyAssignor.class.getName());
+//        // assign a group id to the consumer group
+//        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "");
+//        // assign id to a consumer, can put in a method or put in the constructor
+//        properties.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "");
 
         // Create consumer
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
