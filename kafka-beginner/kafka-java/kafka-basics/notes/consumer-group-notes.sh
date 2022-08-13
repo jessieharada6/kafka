@@ -16,7 +16,7 @@
 [main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=consumer-second-application-1, groupId=second-application] Notifying assignor about the new Assignment(partitions=[demo_java-2])
 [main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=consumer-second-application-1, groupId=second-application] Adding newly assigned partitions: demo_java-2
 [main] INFO ProducerKeyless - Polling
-# as offset has been commited - reset to the latest commited offsets, so start from where it's been left
+# as offset has been commited - reset to the most recent commited offsets, so start from where it's been left
 [main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=consumer-second-application-1, groupId=second-application] Setting offset for partition demo_java-2 to the committed offset FetchPosition{offset=31, offsetEpoch=Optional[0], currentLeader=LeaderAndEpoch{leader=Optional[localhost:9092 (id: 0 rack: null)], epoch=0}}
 
 # dont stop the first consumer, and start second consumer

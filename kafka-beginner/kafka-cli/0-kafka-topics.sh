@@ -51,3 +51,11 @@ kafka-topics.sh --bootstrap-server localhost:9092 --describe
 # Delete a topic 
 kafka-topics.sh --bootstrap-server localhost:9092 --topic first_topic --delete
 # (only works if delete.topic.enable=true)
+
+# https://stackoverflow.com/questions/58761164/in-kafka-ha-why-minimum-number-of-brokers-required-are-3-and-not-2
+# cluster is recommended to have 3 brokers 
+# REPLICATION FACTOR MUST BE LESS THAN OR EQUAL TO number of BROKER
+# because the recommended replication-factor for production is 3 
+# so you need 3 brokers in order to achieve this.
+# 1 lead broker + 2 ISR
+# STILL, ONLY ONE LEAD BROKER FOR 1 GIVEN PARTITION

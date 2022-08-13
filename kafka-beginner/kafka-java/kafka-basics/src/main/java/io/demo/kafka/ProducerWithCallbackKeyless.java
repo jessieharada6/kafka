@@ -51,11 +51,11 @@ public class ProducerWithCallbackKeyless {
             // by default, partitioner.class = class org.apache.kafka.clients.producer.internals.DefaultPartitioner
             // it is sticky partioner
             // if we want to force round-robin, uncomment code below
-            try {
-                Thread.sleep(1000);
-            } catch(InterruptedException e) {
-                e.printStackTrace();
-            }
+            // try {
+            //     Thread.sleep(1000);
+            // } catch(InterruptedException e) {
+            //     e.printStackTrace();
+            // }
         }
 
         // flush the Producer - synchronous, so that we block the operation until all the data is sent

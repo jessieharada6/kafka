@@ -2,6 +2,10 @@
 # by "kafka-console-producer" or "kafka-console-producer.bat" based on your system # (or bin/kafka-console-producer.sh or bin\windows\kafka-console-producer.bat if you didn't setup PATH / Environment variables)
 
 kafka-console-producer.sh 
+# producer chooses which lead partition to send message to
+# https://dzone.com/articles/kafka-producer-architecture-picking-the-partition#:~:text=kafka%20producers&text=the%20producer%20picks%20which%20partition,the%20priority%20of%20the%20record.
+# By default, Kafka producer relies on the key of the record to decide to which partition to write the record. 
+# For two records with the same key, the producer will always choose the same partition.
 
 # KEYLESS
 # EXISTING TOPIC
