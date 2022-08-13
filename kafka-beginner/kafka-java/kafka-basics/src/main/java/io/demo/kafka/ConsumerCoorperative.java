@@ -27,9 +27,6 @@ public class ConsumerCoorperative {
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         // auto.offset.reset
-        // none: if no offsets found, don't start
-        // earliest: read from earliest, --from-beginning
-        // latest: read the latest
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         properties.setProperty(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, CooperativeStickyAssignor.class.getName());
 //        // assign a group id to the consumer group
