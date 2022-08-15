@@ -26,7 +26,8 @@ public class WikimediaChangesProducer {
         // create Producer
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
-        // remember to create a topic
+        // remember to create a topic using cli
+        // kafka-topics.sh --bootstrap-server localhost:9092 --topic wikimedia.recentchange --create --partitions 3 --replication-factor 1
         String topic = "wikimedia.recentchange";
 
         // handle event from stream, and send the stream to producer

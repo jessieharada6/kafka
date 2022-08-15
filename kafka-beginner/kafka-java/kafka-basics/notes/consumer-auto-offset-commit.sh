@@ -2,7 +2,8 @@
 
 # doc: https://docs.confluent.io/platform/current/clients/consumer.html
 # consumer auto offset commit by default
-# at-least-once mode by default - async commits, no missing messages but may duplicate
+# at-least-once mode by default: messages may be read again
+# - async commits, no missing messages but may duplicate
 # offsets commited when calling consumer.poll()
 
 # at-most-once: 
