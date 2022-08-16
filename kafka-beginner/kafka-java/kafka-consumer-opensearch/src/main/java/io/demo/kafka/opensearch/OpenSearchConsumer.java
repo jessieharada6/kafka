@@ -12,6 +12,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.opensearch.action.bulk.BulkRequest;
+import org.opensearch.action.bulk.BulkResponse;
 import org.opensearch.action.index.IndexRequest;
 import org.opensearch.action.index.IndexResponse;
 import org.opensearch.client.Request;
@@ -39,10 +41,9 @@ public class OpenSearchConsumer {
         // create a kafka client
         KafkaConsumer<String, String> consumer = createKafkaConsumer();
 
+        // try(openSearchClient) does openSearchClient.close() after executing this block
+        // try(consumer) does consumer.close() after executing this block
         try(openSearchClient; consumer) {
-            // try(openSearchClient) does openSearchClient.close() after executing this block
-            // try(consumer) does consumer.close() after executing this block
-
             // create index on OpenSearch if it does not exist already
             boolean indexExists =
                     openSearchClient.indices().exists(new GetIndexRequest("wikimedia"), RequestOptions.DEFAULT);
@@ -64,13 +65,13 @@ public class OpenSearchConsumer {
                 int recordCount = records.count();
                 logger.info("Received " + recordCount + " record(s)");
 
-
+                BulkRequest bulkRequest = new BulkRequest();
                 for(ConsumerRecord<String, String> record : records) {
                     // send record to OpenSearch
                     try {
                         // insert unique id to opensearch, to let opensearch know any duplicates
                         // once opensearch defects any duplicates based on id, it will update and not have duplicates
-                        // in turn, we made *** consumer idempotent ***: at least once + idempotent = exactly once
+                        // in turn, we made *** consumer IDEMPOTENT ***: at least once + idempotent = exactly once
                         // strategy 1
                         // String id = record.topic() + "_" + record.partition() + "_" + record.offset();
                         // strategy 2: use the record id under meta
@@ -81,26 +82,37 @@ public class OpenSearchConsumer {
                                 // it was in format of5T3JoIIBw5s1buzmILdI,
                                 // now it will be format of 5f416870-5dfb-4101-b5a4-bd5ef73d1c1e as we extracted id
                                 .id(id);
-                        // index the record
-                        IndexResponse response = openSearchClient.index(indexRequest, RequestOptions.DEFAULT);
-                        logger.info("Inserted 1 document into OpenSearch - id of " + response.getId());
+
+                        bulkRequest.add(indexRequest); // fill up bulk request
+
+                        // currently, inefficient
+                        // index the record for every index request for every single record comes in
+                        //IndexResponse response = openSearchClient.index(indexRequest, RequestOptions.DEFAULT);
+                        //logger.info("Inserted 1 document into OpenSearch - id of " + response.getId());
+
                     } catch (Exception e) {
 
                     }
+                }
+                // after the for loop where it adds all the bulk request actions
+                // send to opensearch and commit offsets only if bulk request has actions
+                if (bulkRequest.numberOfActions() > 0) {
+                    // now, more efficient - data sends to opensearch in bulk
+                    BulkResponse responses = openSearchClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+                    logger.info("Inserted " + responses.getItems().length + " records");
 
-                    // to check lag on topic
-                    // kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group consumer-opensearch
+                    try {
+                        Thread.sleep(100); // add more chances of getting bulk request actions
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
 
-                    // to query at http://localhost:5601/app/dev_tools#/console,
-                    // start both producer and consumer, get a key from consumer log ([main] INFO OpenSearchConsumer - Inserted 1 document into OpenSearch - id of 5T3JoIIBw5s1buzmILdI)
-                    // GET /wikimedia/_doc/5T3JoIIBw5s1buzmILdI
+                    // commit offsets after the batch is consumed
+                    // because properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
+                    //consumer.commitSync();
                 }
             }
         }
-
-        // main code
-
-        // close things
     }
 
     private static String extractId(String json) {
@@ -151,8 +163,21 @@ public class OpenSearchConsumer {
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest"); // can be earliest
+        // make ENABLE_AUTO_COMMIT_CONFIG false alone
+        // consumer won't commit offset automatically, lag will always remain the same - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group consumer-opensearch
+        // everytime the consumer starts, it reads from the beginning
+        //properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
 
         // Create consumer
         return new KafkaConsumer<>(properties);
     }
 }
+
+
+
+// to check lag on topic
+// kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group consumer-opensearch
+
+// to query at http://localhost:5601/app/dev_tools#/console,
+// start both producer and consumer, get a key from consumer log ([main] INFO OpenSearchConsumer - Inserted 1 document into OpenSearch - id of 5T3JoIIBw5s1buzmILdI)
+// GET /wikimedia/_doc/5T3JoIIBw5s1buzmILdI
