@@ -41,6 +41,7 @@ connect-standalone worker.properties file-stream-demo-standalone.properties
 # at demo-file.txt, leave a line at the end, so can see the data
 # shut down the terminal when you're done
 # then start, the topic knows where to read from
+# STANDALONE: CONFIG BUNDLED WITH WORKER
 connect-standalone worker.properties file-stream-demo-standalone.properties
 # the old data is saved and can still see, write more data, data is loaded
 ###############
@@ -55,17 +56,24 @@ kafka-topics --create --topic demo-2-distributed --partitions 3 --replication-fa
 
 # head over to 127.0.0.1:3030 -> Connect UI
 # Create a new connector -> File Source
+# DISTRIBUTED: CONFIG SUBMITTED BY REST API
 # Paste the configuration at source/demo-2/file-stream-demo-distributed.properties
 
 # Now that the configuration is launched, we need to create the file demo-file.txt
+# exit the root@fast-data-dev
+# as we run the connector in distributed mode, it needs to be inside the cluster
 docker ps
 docker exec -it <containerId> bash
+# these two command lines above bring us to the same container as docker-compose up kafka-cluster
+# write data to the file
 touch demo-file.txt
 echo "hi" >> demo-file.txt
 echo "hello" >> demo-file.txt
 echo "from the other side" >> demo-file.txt
+# refresh http://127.0.0.1:3030/kafka-topics-ui/#/cluster/fast-data-dev/topic/n/demo-2-distributed/
 
-# Read the topic data
+# Exit and run below
+# Read the topic data, to see the schema in json
 docker run --rm -it --net=host faberchri/fast-data-dev bash
 kafka-console-consumer --topic demo-2-distributed --from-beginning --bootstrap-server 127.0.0.1:9092
 # observe we now have json as an output, even though the input was text!
