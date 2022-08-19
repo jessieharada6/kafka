@@ -21,8 +21,10 @@ services:
 
   # we will use elasticsearch as one of our sinks.
   # This configuration allows you to start elasticsearch
+  # run below and start it at Docker desktop
+  # docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.2
   elasticsearch:
-    image: itzg/elasticsearch:2.4.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
     environment:
       PLUGINS: appbaseio/dejavu
       OPTS: -Dindex.number_of_shards=1 -Dindex.number_of_replicas=0
@@ -39,3 +41,34 @@ services:
       POSTGRES_DB: postgres       # define database
     ports:
       - 5432:5432                 # Postgres port
+  
+  # search engine
+  opensearch:
+      image: opensearchproject/opensearch:1.2.4
+      container_name: opensearch
+      environment:
+          - plugins.security.disabled=true
+          - discovery.type=single-node
+          - http.port=9200
+          - http.cors.enabled=true
+          - http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358
+          - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+          - http.cors.allow-credentials=true
+          - bootstrap.memory_lock=true
+          - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+      ports:
+          - '9200:9200'
+      ulimits:
+          memlock:
+              soft: -1
+              hard: -1
+      volumes:
+          - ./data:/usr/share/opensearch/data
+  # elasticsearch browser
+  dejavu:
+      image: appbaseio/dejavu:3.6.0
+      container_name: dejavu
+      ports:
+          - '1358:1358'
+      links:
+          - opensearch

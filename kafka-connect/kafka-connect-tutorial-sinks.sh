@@ -5,7 +5,10 @@
 
 # 1) Source connectors
 # Start our kafka cluster
-docker-compose up kafka-cluster elasticsearch postgres
+# docker-compose up kafka-cluster elasticsearch postgres
+# elasticsearch - then start at docker desktop
+docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+docker-compose up kafka-cluster postgres
 # Wait 2 minutes for the kafka cluster to be started
 
 ###############
