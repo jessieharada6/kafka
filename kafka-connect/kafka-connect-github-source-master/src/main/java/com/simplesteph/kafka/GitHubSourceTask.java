@@ -37,6 +37,7 @@ public class GitHubSourceTask extends SourceTask {
     public void start(Map<String, String> map) {
         //Do things here that are required to start your task. This could be open a connection to a database, etc.
         config = new GitHubSourceConnectorConfig(map);
+        // know where to resume
         initializeLastVariables();
         gitHubHttpAPIClient = new GitHubAPIHttpClient(config);
     }
@@ -64,8 +65,6 @@ public class GitHubSourceTask extends SourceTask {
         }
     }
 
-
-
     @Override
     public List<SourceRecord> poll() throws InterruptedException {
         gitHubHttpAPIClient.sleepIfNeed();
@@ -84,7 +83,7 @@ public class GitHubSourceTask extends SourceTask {
         }
         if (i > 0) log.info(String.format("Fetched %s record(s)", i));
         if (i == 100){
-            // we have reached a full batch, we need to get the next one
+            // we have reached a full batch, we need to get the next one - pagination
             nextPageToVisit += 1;
         }
         else {
@@ -100,7 +99,7 @@ public class GitHubSourceTask extends SourceTask {
                 sourcePartition(),
                 sourceOffset(issue.getUpdatedAt()),
                 config.getTopic(),
-                null, // partition will be inferred by the framework
+                null, // partition will be inferred by the framework - always leave it as null
                 KEY_SCHEMA,
                 buildRecordKey(issue),
                 VALUE_SCHEMA,
@@ -132,7 +131,7 @@ public class GitHubSourceTask extends SourceTask {
         Struct key = new Struct(KEY_SCHEMA)
                 .put(OWNER_FIELD, config.getOwnerConfig())
                 .put(REPOSITORY_FIELD, config.getRepoConfig())
-                .put(NUMBER_FIELD, issue.getNumber());
+                .put(NUMBER_FIELD, issue.getNumber()); // choose this key so for same issue number, we get them in order
 
         return key;
     }

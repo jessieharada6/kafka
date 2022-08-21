@@ -311,6 +311,7 @@ public class User {
         return this;
     }
 
+    // pass json object and map to User object
     public static User fromJson(JSONObject jsonObject) {
         User user = new User();
         user.setUrl(jsonObject.getString(USER_URL_FIELD));

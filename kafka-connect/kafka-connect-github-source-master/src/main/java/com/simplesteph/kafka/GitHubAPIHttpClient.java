@@ -80,6 +80,7 @@ public class GitHubAPIHttpClient {
     }
 
     protected HttpResponse<JsonNode> getNextIssuesAPI(Integer page, Instant since) throws UnirestException {
+        // unirest - http client library
         GetRequest unirest = Unirest.get(constructUrl(page, since));
         if (!config.getAuthUsername().isEmpty() && !config.getAuthPassword().isEmpty() ){
             unirest = unirest.basicAuth(config.getAuthUsername(), config.getAuthPassword());

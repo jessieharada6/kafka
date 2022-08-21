@@ -37,6 +37,7 @@ public class GitHubSchemas {
     public static final String SCHEMA_VALUE_USER = "com.simplesteph.kafka.connect.github.UserValue";
     public static final String SCHEMA_VALUE_PR = "com.simplesteph.kafka.connect.github.PrValue";
 
+    // keyed messages:
     // Key Schema
     public static final Schema KEY_SCHEMA = SchemaBuilder.struct().name(SCHEMA_KEY)
             .version(1)
@@ -48,6 +49,7 @@ public class GitHubSchemas {
     // Value Schema
     public static final Schema USER_SCHEMA = SchemaBuilder.struct().name(SCHEMA_VALUE_USER)
             .version(1)
+            .doc("doumentation on what this schema is used for")
             .field(USER_URL_FIELD, Schema.STRING_SCHEMA)
             .field(USER_ID_FIELD, Schema.INT32_SCHEMA)
             .field(USER_LOGIN_FIELD, Schema.STRING_SCHEMA)
@@ -58,9 +60,14 @@ public class GitHubSchemas {
             .version(1)
             .field(PR_URL_FIELD, Schema.STRING_SCHEMA)
             .field(PR_HTML_URL_FIELD, Schema.STRING_SCHEMA)
+            // optional schema, ALTERNATIVELY:
+            //.field(PR_HTML_URL_FIELD, Schema.OPTIONAL_STRING_SCHEMA)
             .optional()
             .build();
 
+
+    // value schema
+    // FINAL SCHEMA - nested schema structure
     public static final Schema VALUE_SCHEMA = SchemaBuilder.struct().name(SCHEMA_VALUE_ISSUE)
             .version(2)
             .field(URL_FIELD, Schema.STRING_SCHEMA)

@@ -23,13 +23,13 @@ public class Issue {
     private String state;
     private String title;
     private String body;
-    private User user;
+    private User user; // user is another object on its own
     private List<Label> labels = null;
     private Assignee assignee;
     private Milestone milestone;
     private Boolean locked;
     private Integer comments;
-    private PullRequest pullRequest;
+    private PullRequest pullRequest; // PullRequest is another object on its own
     private Object closedAt;
     private Instant createdAt;
     private Instant updatedAt;
@@ -404,7 +404,7 @@ public class Issue {
         issue.withNumber(jsonObject.getInt(NUMBER_FIELD));
         issue.withState(jsonObject.getString(STATE_FIELD));
 
-        // user is mandatory
+        // user is mandatory, user is the sub object
         User user = User.fromJson(jsonObject.getJSONObject(USER_FIELD));
         issue.withUser(user);
 

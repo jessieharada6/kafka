@@ -52,6 +52,7 @@ public class GitHubSourceConnectorConfig extends AbstractConfig {
                 .define(TOPIC_CONFIG, Type.STRING, Importance.HIGH, TOPIC_DOC)
                 .define(OWNER_CONFIG, Type.STRING, Importance.HIGH, OWNER_DOC)
                 .define(REPO_CONFIG, Type.STRING, Importance.HIGH, REPO_DOC)
+                // [1, 100]
                 .define(BATCH_SIZE_CONFIG, Type.INT, 100, new BatchSizeValidator(), Importance.LOW, BATCH_SIZE_DOC)
                 .define(SINCE_CONFIG, Type.STRING, ZonedDateTime.now().minusYears(1).toInstant().toString(),
                         new TimestampValidator(), Importance.HIGH, SINCE_DOC)

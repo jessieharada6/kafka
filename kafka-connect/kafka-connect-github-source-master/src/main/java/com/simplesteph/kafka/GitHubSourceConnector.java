@@ -20,6 +20,8 @@ public class GitHubSourceConnector extends SourceConnector {
     }
 
     @Override
+    // create source connector properties - GitHubSourceConnectorExample.properties
+    // pass the properties to the connector config
     public void start(Map<String, String> map) {
         config = new GitHubSourceConnectorConfig(map);
     }
@@ -30,14 +32,19 @@ public class GitHubSourceConnector extends SourceConnector {
     }
 
     @Override
+    // source connector can't be parallalised, so it will always be 1 task
     public List<Map<String, String>> taskConfigs(int i) {
         // Define the individual task configurations that will be executed.
         ArrayList<Map<String, String>> configs = new ArrayList<>(1);
+        // return the map from start()
         configs.add(config.originalsStrings());
         return configs;
     }
 
     @Override
+    // stop the connector
+    // for example, if upon start, we open a database
+    // here is a good place to close the connection string
     public void stop() {
         // Do things that are necessary to stop your connector.
         // nothing is necessary to stop for this connector
