@@ -68,3 +68,12 @@ exit    1
 # it comes one by one, no batching, real time
 
 # verify the data has been written to the output topic!
+
+# and now if i list the topic again
+kafka-topics.sh --bootstrap-server localhost:9092 --list      
+# outcome                                     
+__consumer_offsets
+streams-plaintext-input
+streams-wordcount-KSTREAM-AGGREGATE-STATE-STORE-0000000003-changelog
+streams-wordcount-KSTREAM-AGGREGATE-STATE-STORE-0000000003-repartition
+streams-wordcount-output
