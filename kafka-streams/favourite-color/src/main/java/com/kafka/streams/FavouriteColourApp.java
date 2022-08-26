@@ -52,8 +52,7 @@ public class FavouriteColourApp {
         // 4. present
         colorCounts.toStream().to("fav-color-output", Produced.with(Serdes.String(), Serdes.Long()));
         KafkaStreams streams = new KafkaStreams(builder.build(), config);
-        streams.cleanUp();
-        // only in dev
+        streams.cleanUp(); // only in dev
         streams.start();
         // shutdown hook to close the streams app
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));

@@ -34,12 +34,14 @@ public class BankBalanceProducer {
         int i = 1;
         while(true) {
             try {
+                System.out.println("Producing batch: " + i);
                 producer.send(getRandomTransactions("Steph"));
                 Thread.sleep(100);
                 producer.send(getRandomTransactions("JoJo"));
                 Thread.sleep(100);
                 producer.send(getRandomTransactions("Sasha"));
                 Thread.sleep(100);
+                i += 1;
             } catch(InterruptedException ex) {
                 break;
             }
@@ -56,6 +58,7 @@ public class BankBalanceProducer {
         transaction.put("name", name);
         transaction.put("amount", randomAmount);
         transaction.put("time", now.toString());
+        // send with key of name
         return new ProducerRecord<String, String>("bank-balance-input", name, transaction.toString());
     }
 }
