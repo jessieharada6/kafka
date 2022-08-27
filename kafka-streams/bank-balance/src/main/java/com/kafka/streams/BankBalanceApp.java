@@ -40,6 +40,7 @@ public class BankBalanceApp {
 
         StreamsBuilder builder = new StreamsBuilder();
         KStream<String, JsonNode> input
+                // overwrite default settings, as by default, value is Serdes.String()
                 // Consumed.with(Serdes.String(), jsonSerde) - consume with key, value type
                 = builder.stream("bank-balance-input", Consumed.with(Serdes.String(), jsonSerde));
 
