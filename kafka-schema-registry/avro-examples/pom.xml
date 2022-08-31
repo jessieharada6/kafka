@@ -60,6 +60,7 @@
                             <goal>idl-protocol</goal>
                         </goals>
                         <configuration>
+                            <!-- take schema from this path -->
                             <sourceDirectory>${project.basedir}/src/main/resources/avro</sourceDirectory>
                             <stringType>String</stringType>
                             <createSetters>false</createSetters>
@@ -69,11 +70,12 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--force discovery of generated classes-->
+            <!--force discovery of generated classes - help intellij find the sources -->
+            <!--anything under target/generated-sources/avro should be added to intellij -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>add-source</id>

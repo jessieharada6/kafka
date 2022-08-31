@@ -1,0 +1,5 @@
+com/kafka/schema/registry/avro/generic/GenericRecordExamples.class
+com/customer/Customer$Builder.class
+com/customer/Customer.class
+com/kafka/schema/registry/avro/specific/SpecificRecordExamples.class
+com/customer/Customer$1.class
