@@ -1,0 +1,9 @@
+kafka/schema/registry/Customer$1.class
+kafka/schema/registry/ProducerV1.class
+kafka/schema/registry/ConsumerV1.class
+kafka/schema/registry/Customer$Builder.class
+com/avro/Customer.class
+com/avro/Customer$Builder.class
+kafka/schema/registry/Customer.class
+com/avro/Customer$1.class
+kafka/schema/registry/ProducerV1$1.class

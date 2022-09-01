@@ -15,11 +15,10 @@ kafka-avro-console-producer \
 {"f1": "value1"}
 {"f1": "value2"}
 {"f1": "value3"}
-# let's trigger an error:
+# let's trigger an error: as the key is wrong
 {"f2": "value4"}
-# let's trigger another error:
+# let's trigger another error: as the type of the value is not as agreed
 {"f1": 1}
-
 
 # Consume the records from the beginning of the topic:
 kafka-avro-console-consumer --topic test-avro \
