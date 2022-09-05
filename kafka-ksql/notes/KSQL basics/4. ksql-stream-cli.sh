@@ -11,6 +11,11 @@ list topics;
 create stream users_stream (name VARCHAR, countrycode VARCHAR) WITH (KAFKA_TOPIC='USERS', VALUE_FORMAT='DELIMITED');
 
 list streams;
+ Stream Name         | Kafka Topic                 | Key Format | Value Format | Windowed 
+------------------------------------------------------------------------------------------
+ KSQL_PROCESSING_LOG | default_ksql_processing_log | KAFKA      | JSON         | false    
+ USERS_STREAM        | USERS                       | KAFKA      | DELIMITED    | false    
+ 
 # in the course, it says it doesn't show the list, but i saw the list being printed
 select name, countrycode from users_stream;
 +-------------------------------------------------------------------+-------------------------------------------------------------------+
