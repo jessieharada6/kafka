@@ -309,6 +309,8 @@ from USERPROFILE up
 left join COUNTRYTABLE ct on ct.countrycode=up.countrycode;
 
 select description from up_joined emit changes;
+
+select * from up_joined emit changes;
 ```
 
 ## Lecture 15: Pull Queries
@@ -328,6 +330,7 @@ INSERT INTO driverLocations (driverId, countrycode, city, driverName) VALUES ('1
 INSERT INTO driverLocations (driverId, countrycode, city, driverName) VALUES ('2', 'AU', 'Melbourne', 'Bob');
 INSERT INTO driverLocations (driverId, countrycode, city, driverName) VALUES ('3', 'GB', 'London', 'Carole');
 INSERT INTO driverLocations (driverId, countrycode, city, driverName) VALUES ('4', 'US', 'New York', 'Derek');
+
 ```
 
 ```
@@ -348,20 +351,13 @@ select countrycode, numdrivers from countryDrivers where countrycode='AU';
 ## Lecture 16: Kafka Connect with ksqlDB
 Kafka Connect with ksqlDB. You will be running this example using docker. First we need to stop the local Confluent platform
 ```
-confluent local services stop
+<!-- confluent local services stop -->
 ```
 
 Now, start Postgres and Confluent platform together using docker
 ```
 docker-compose up -d
 ```
-
-
-Start ksqlDB KSQL CLI
-```
-docker-compose exec  ksqldb-cli ksql http://ksqldb-server:8088
-```
-
 
 Kafka Connect
 
@@ -376,9 +372,13 @@ To look at the Postgres table
 docker-compose exec postgres psql -U postgres -c "select * from carusers;"
 ```
 
+Start ksqlDB KSQL CLI
+```
+docker-compose exec  ksqldb-cli ksql http://ksqldb-server:8088
+```
 
 ```
-CREATE SOURCE CONNECTOR postgres_jdbc_source WITH(
+CREATE SOURCE CONNECTOR `postgres_jdbc_source` WITH(
   "connector.class"='io.confluent.connect.jdbc.JdbcSourceConnector',
   "connection.url"='jdbc:postgresql://postgres:5432/postgres',
   "mode"='incrementing',
