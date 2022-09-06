@@ -6,7 +6,8 @@ cd /opt
 sudo ln -s confluent-7.2.1 confluent  # symbolic link the folder to use confluent as path
 ls /opt/confluent/bin                 # try the path
 
-export PATH=${PATH}:/opt/confluent/bin # path
+# path
+export PATH=${PATH}:/opt/confluent/bin 
 export CONFLUENT_HOME=/opt/confluent 
 
 kafka-topics                            # to check if the installation is successful
