@@ -29,7 +29,7 @@ public class ConsumerCoorperative {
         // auto.offset.reset
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         properties.setProperty(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, CooperativeStickyAssignor.class.getName());
-//        // assign a group id to the consumer group
+        // assign a group id to the consumer group
         // if you set group.id properly, when consumer is restarted it will belong to same group, and will start reading data from where it last stopped.
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "");
 //        // assign id to a consumer, can put in a method or put in the constructor
